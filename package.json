@@ -2,23 +2,14 @@
   "name": "atlas-team",
   "version": "0.1.0",
   "private": true,
+  "description": "Atlas Team — employee portal connected to Atlas (ai-assistant)",
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
-  },
-  "dependencies": {
-    "next": "^15.3.5",
-    "react": "^19.1.0",
-    "react-dom": "^19.1.0"
-  },
-  "devDependencies": {
-    "@types/node": "^22.15.30",
-    "@types/react": "^19.1.6",
-    "@types/react-dom": "^19.1.6",
-    "eslint": "^9.28.0",
-    "eslint-config-next": "^15.3.5",
-    "typescript": "^5.8.3"
+    "postinstall": "git submodule update --init --recursive && node scripts/apply-team-overlay.mjs && npm --prefix atlas install",
+    "dev": "npm --prefix atlas run dev",
+    "build": "node scripts/apply-team-overlay.mjs && npm --prefix atlas run build",
+    "start": "npm --prefix atlas run start",
+    "lint": "npm --prefix atlas run lint",
+    "test": "npm --prefix atlas run test",
+    "sync": "node scripts/apply-team-overlay.mjs"
   }
 }

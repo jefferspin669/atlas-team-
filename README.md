@@ -1,55 +1,54 @@
 # Atlas Team
 
-Employee portal for Atlas — the workforce-facing side of the platform.
+**Atlas Team** is the employee portal for [Atlas](https://github.com/jefferspin669/ai-assistant-) (`ai-assistant`). It runs inside the same Atlas app — not a separate codebase.
 
-When an employee signs in, Atlas detects their role and routes them to **Atlas Team**. Managers and owners use **Boss Atlas** (`/app/*` in the main Atlas repo). Same backend, same data, different interfaces — the permission engine controls what each person sees.
+| Experience | Who | Routes |
+|------------|-----|--------|
+| **Boss Atlas** | Owners, managers | `/app/*`, `/login` |
+| **Atlas Team** | Employees | `/team`, `/team/login` |
 
-## Features
-
-- **Today** — Greeting, tasks due, meetings, shift, announcements, reminders
-- **Ask Atlas** — Permission-scoped employee AI assistant
-- **My Work** — To Do / In Progress / Waiting / Completed task board
-- **Schedule** — Shifts, meetings, deadlines, time off, company events
-- **Time Off** — Request and track PTO
-- **Messages** — DMs, team chats, project channels (shared with Boss Atlas)
-- **Company Resources** — Handbook, policies, training, FAQs via Business Memory
-- **Expenses** — Receipt scanning and submission
-- **Inventory** — Use/receive inventory (permission-gated)
-- **My Profile** — Employee info with locked company-controlled fields
-- **Notifications** — Task, meeting, message, and approval alerts
+Same backend. Same employees, tasks, messages, calendar, inventory, and Business Memory. The permission engine controls what each person sees.
 
 ## Quick start
 
 ```bash
-npm install
-npm run dev
+npm install    # clones Atlas (ai-assistant) + applies Team overlay
+npm run dev    # http://localhost:3000
 ```
 
-Open [http://localhost:3000/login](http://localhost:3000/login)
+- **Boss Atlas:** http://localhost:3000/login
+- **Atlas Team:** http://localhost:3000/team/login
 
-### Demo account
+## How it connects to Atlas
 
-| Name | Email | Code | Role |
-|------|-------|------|------|
-| Marcus Johnson | marcus@acme.local | MJ2024 | Field Technician |
-| Sarah Chen | sarah@acme.local | SC2024 | Manager |
-| Alex Rivera | alex@acme.local | AR2024 | Sales Rep |
-
-## Architecture
+This repo contains:
 
 ```
-Boss Atlas (/app/*)          Atlas Team (/today, /work, …)
-        │                              │
-        └──────── Same Atlas backend ──┘
-                   Same employees
-                   Same tasks
-                   Same messages
-                   Same Business Memory
-                   Permission engine → what each role sees
+atlas-team/
+├── atlas/                  ← git submodule → github.com/jefferspin669/ai-assistant-
+├── overlay/                ← Atlas Team patches (routes, API, branding)
+├── scripts/apply-team-overlay.mjs
+└── package.json            ← runs Atlas via submodule
 ```
 
-Data is currently stored in `localStorage` for demo purposes. Production wiring connects to the shared Postgres backend in the main Atlas repo.
+On `npm install`, the overlay is applied onto the Atlas submodule:
+
+- **`/team`** routes → employee portal (`user-workspace.ts`)
+- **`POST /api/employee/chat`** → Atlas Brain with employee permissions
+- **Ask Atlas** in the employee UI → shared Atlas API + local fallback
+- **Messages, tasks, schedule** → same data Boss Atlas uses in `/app/team`
+
+To refresh after pulling Atlas updates:
+
+```bash
+git submodule update --remote atlas
+npm run sync
+```
+
+## Upstreaming
+
+Team integration patches in `overlay/` should eventually merge into `ai-assistant-`. Until then, this overlay keeps atlas-team in sync with upstream Atlas.
 
 ## Related
 
-- Main Atlas app: [ai-assistant-](https://github.com/jefferspin669/ai-assistant-)
+- Main Atlas repo: https://github.com/jefferspin669/ai-assistant-
