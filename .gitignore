@@ -1,0 +1,4 @@
+node_modules
+atlas/node_modules
+atlas/.next
+.env*.local

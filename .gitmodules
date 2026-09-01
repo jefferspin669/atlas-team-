@@ -1,0 +1,3 @@
+[submodule "atlas"]
+	path = atlas
+	url = https://github.com/jefferspin669/ai-assistant-.git

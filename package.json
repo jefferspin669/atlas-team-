@@ -1,0 +1,15 @@
+{
+  "name": "atlas-team",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Atlas Team — employee portal connected to Atlas (ai-assistant)",
+  "scripts": {
+    "postinstall": "git submodule update --init --recursive && node scripts/apply-team-overlay.mjs && npm --prefix atlas install",
+    "dev": "npm --prefix atlas run dev",
+    "build": "node scripts/apply-team-overlay.mjs && npm --prefix atlas run build",
+    "start": "npm --prefix atlas run start",
+    "lint": "npm --prefix atlas run lint",
+    "test": "npm --prefix atlas run test",
+    "sync": "node scripts/apply-team-overlay.mjs"
+  }
+}
